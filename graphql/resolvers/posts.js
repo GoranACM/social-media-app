@@ -26,10 +26,14 @@ module.exports = {
       }
     },
   },
+
   Mutation: {
     async createPost(_, { body }, context) {
       const user = checkAuth(context);
-      console.log(user);
+
+      if (args.body.trim() === '') {
+        throw new Error('Post cannot be empty');
+      }
 
       const newPost = new Post({
         body,
@@ -44,6 +48,7 @@ module.exports = {
 
       return post;
     },
+
     async deletePost(_, { postId }, context) {
       const user = checkAuth(context);
 
@@ -59,6 +64,7 @@ module.exports = {
         throw new Error(err);
       }
     },
+
     async likePost(_, { postId }, context) {
       const { username } = checkAuth(context);
 
