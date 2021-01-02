@@ -21,6 +21,9 @@ function PostForm() {
       proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       values.body = '';
     },
+    onError(err) {
+      return err;
+    },
   });
 
   function createPostCallback() {
