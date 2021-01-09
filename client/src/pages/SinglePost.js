@@ -1,17 +1,17 @@
-import gql from 'graphql-tag';
 import React, { useContext } from 'react';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-import { Button, Card, Grid, Icon } from 'semantic-ui-react';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { Button, Card, Grid, Icon, Image, Label } from 'semantic-ui-react';
 import moment from 'moment';
 import LikeButton from '../components/LikeButton';
+import DeleteButton from '../components/DeleteButton';
 
 import { AuthContext } from '../context/auth';
 
 function SinglePost(props) {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-  console.log(postId);
+
   const {
     data: { getPost },
   } = useQuery(FETCH_POST_QUERY, {
@@ -19,6 +19,10 @@ function SinglePost(props) {
       postId,
     },
   });
+
+  function deletePostCallback() {
+    props.history.push('/');
+  }
 
   let postMarkup;
   if (!getPost) {
@@ -67,6 +71,9 @@ function SinglePost(props) {
                     {commentCount}
                   </Label>
                 </Button>
+                {user && user.username === username && (
+                  <DeleteButton postId={id} callback={deletePostCallback} />
+                )}
               </Card.Content>
             </Card>
           </Grid.Column>
@@ -74,6 +81,7 @@ function SinglePost(props) {
       </Grid>
     );
   }
+  return postMarkup;
 }
 
 const FETCH_POST_QUERY = gql`
